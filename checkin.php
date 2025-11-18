@@ -1,7 +1,7 @@
 <?php
 // ----- The "Brain" (PHP Logic) -----
 
-// 🔥 FIX: We MUST start a session to track the browser
+// We MUST start a session to track the browser
 session_start();
 
 // 1. Include our database "plug"
@@ -21,7 +21,7 @@ function get_class_name($class) {
     return $class['year'] . " Year - " . $class['branch'] . " - " . $class['subject'] . " (" . $class['section'] . ")";
 }
 
-// 4. 🔥 NEW PROXY FIX: Check if this browser has already checked in
+// 4. Check if this browser has already checked in
 // We create a unique session variable for this specific session
 $session_check_key = 'checked_in_' . $session_id;
 
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($success_msg) && empty($error_
                             if($stmt_insert->execute()) {
                                 $success_msg = "Success! You are now checked in. You may close this page.";
                                 
-                                // 10. 🔥 SET THE FLAG! Mark this browser as "used" for this session.
+                                // 10. SET THE FLAG! Mark this browser as "used" for this session.
                                 $_SESSION[$session_check_key] = true;
                                 
                             } else {

@@ -14,7 +14,7 @@ $prof_id = $_SESSION['prof_id'];
 
 if ($session_id > 0) {
     
-    // 3. 🔥 SQL to "deactivate" the session
+    // 3. SQL to "deactivate" the session
     // We also check that the prof_id matches, so one professor
     // can't accidentally close another's session.
     $sql = "UPDATE sessions s

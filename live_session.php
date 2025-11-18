@@ -1,17 +1,16 @@
 <?php
-// ----- The "Brain" (PHP Logic) -----
 
-// 1. Start the session and check if logged in
+// Start the session and check if logged in
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: login.php");
     exit;
 }
 
-// 2. Include our database "plug"
+// Include our database "plug"
 require_once 'db_connect.php';
 
-// 3. Get the session ID from the URL (e.g., ...?id=1)
+// Get the session ID from the URL (e.g., ...?id=1)
 $session_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($session_id == 0) {
@@ -25,8 +24,8 @@ function get_class_name($class) {
     return $class['year'] . " Year - " . $class['branch'] . " - " . $class['subject'] . " (" . $class['section'] . ")";
 }
 
-// 4. Fetch the session details (PIN) and ALL Class details
-// 🔥 FIX: We now select 'c.*' (all columns from classes) instead of just 'c.class_name'
+// Fetch the session details (PIN) and ALL Class details
+// We now select 'c.*' (all columns from classes) instead of just 'c.class_name'
 $sql = "SELECT s.session_pin, c.* FROM sessions s
         JOIN classes c ON s.class_id = c.class_id
         WHERE s.session_id = ?";
@@ -51,15 +50,14 @@ if ($stmt = $conn->prepare($sql)) {
 }
 $conn->close();
 
-// 5. Build the friendly name
+// Build the friendly name
 $friendly_class_name = get_class_name($class_details);
 
-// 6. This is the URL for the QR code (no changes here)
+// This is the URL for the QR code (no changes here)
 $host = $_SERVER['HTTP_HOST']; // Gets 'localhost'
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Gets '/smart_attendance'
 $qr_code_url = "http://" . $host . $path . "/checkin.php?session=" . $session_id;
 
-// ----- End of "Brain" -----
 ?>
 
 <!DOCTYPE html>

@@ -1,5 +1,5 @@
 <?php
-// 1. Start session and check if professor is logged in
+// Start session and check if professor is logged in
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: login.php");
@@ -14,21 +14,21 @@ function get_class_name($class) {
     return $class['year'] . " Year - " . $class['branch'] . " - " . $class['subject'] . " (" . $class['section'] . ")";
 }
 
-// 2. Get the session ID
+// Get the session ID
 $session_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($session_id == 0) {
     die("Invalid session.");
 }
 
-// 3. Set up the file download headers
+// Set up the file download headers
 $filename = "attendance_session_" . $session_id . "_" . date("Y-m-d") . ".csv";
 
 // These headers tell the browser to "download this file"
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-// 4. 🔥 FIX: Get Class/Session details for the file header
+// Get Class/Session details for the file header
 // We select c.* (all columns) to build the friendly name
 $sql_info = "SELECT c.*, s.created_at 
              FROM sessions s 
@@ -41,7 +41,7 @@ $result_info = $stmt_info->get_result();
 $info = $result_info->fetch_assoc();
 $friendly_class_name = get_class_name($info); // Use the helper
 
-// 5. Get the student list
+// Get the student list
 $sql_logs = "SELECT student_id, student_name, log_time 
              FROM attendance_logs 
              WHERE session_id = ? 
@@ -51,7 +51,7 @@ $stmt_logs->bind_param("i", $session_id);
 $stmt_logs->execute();
 $result_logs = $stmt_logs->get_result();
 
-// 6. "Print" the CSV data to the browser
+// "Print" the CSV data to the browser
 $output = fopen('php://output', 'w');
 
 // Add our headers to the CSV

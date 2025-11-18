@@ -4,7 +4,7 @@
 // 1. We MUST start the session to access the $_SESSION variables
 session_start();
 
-// 2. 🔥 SECURITY CHECK
+// 2. SECURITY CHECK
 // Check if the user is logged in. If not, redirect them to the login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: login.php");
@@ -23,7 +23,7 @@ function get_class_name($class) {
     return $class['year'] . " Year - " . $class['branch'] . " - " . $class['subject'] . " (" . $class['section'] . ")";
 }
 
-// 5. 🔥 FIX: Fetch the list of classes for this professor
+// 5. Fetch the list of classes for this professor
 // We select all columns ('*') so we can build the friendly name.
 $classes_list = [];
 $sql = "SELECT * FROM classes WHERE prof_id = ?";

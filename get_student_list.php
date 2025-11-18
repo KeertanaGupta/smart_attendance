@@ -28,7 +28,7 @@ if ($session_id > 0) {
 }
 $conn->close();
 
-// 5. 🔥 This is the "API" part:
+// 5. This is the "API" part:
 // Tell the browser we're sending JSON, not HTML
 header('Content-Type: application/json');
 

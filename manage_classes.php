@@ -1,5 +1,5 @@
 <?php
-// 1. Start session and check login
+// Start session and check login
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: login.php");
@@ -10,7 +10,7 @@ require_once 'db_connect.php';
 $prof_id = $_SESSION['prof_id'];
 $message = "";
 
-// 2. Handle the "Add Class" form submission
+// Handle the "Add Class" form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_class'])) {
     $year = $_POST['year'];
     $branch = $_POST['branch'];
@@ -29,29 +29,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_class'])) {
     }
 }
 
-// 3. Handle a "Delete Class" request
+// Handle a "Delete Class" request
 if (isset($_GET['delete'])) {
     $class_id_to_delete = intval($_GET['delete']);
     
-    // 🔥 FIX: We use a transaction. All queries must succeed, or none will.
+    // We use a transaction. All queries must succeed, or none will.
     $conn->begin_transaction();
     
     try {
-        // 1. Delete "grandchildren": all attendance logs for all sessions of this class
+        // Delete "grandchildren": all attendance logs for all sessions of this class
         $sql_del_logs = "DELETE FROM attendance_logs WHERE session_id IN (SELECT session_id FROM sessions WHERE class_id = ?)";
         $stmt_del_logs = $conn->prepare($sql_del_logs);
         $stmt_del_logs->bind_param("i", $class_id_to_delete);
         $stmt_del_logs->execute();
         $stmt_del_logs->close();
         
-        // 2. Delete "children": all sessions for this class
+        // Delete "children": all sessions for this class
         $sql_del_sessions = "DELETE FROM sessions WHERE class_id = ?";
         $stmt_del_sessions = $conn->prepare($sql_del_sessions);
         $stmt_del_sessions->bind_param("i", $class_id_to_delete);
         $stmt_del_sessions->execute();
         $stmt_del_sessions->close();
         
-        // 3. Delete the "parent": the class itself (with security check)
+        // Delete the "parent": the class itself (with security check)
         $sql_del_class = "DELETE FROM classes WHERE class_id = ? AND prof_id = ?";
         $stmt_del_class = $conn->prepare($sql_del_class);
         $stmt_del_class->bind_param("ii", $class_id_to_delete, $prof_id);
@@ -74,7 +74,7 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// 4. Fetch all existing classes for this professor to display
+// Fetch all existing classes for this professor to display
 $classes_list = [];
 $sql_fetch = "SELECT * FROM classes WHERE prof_id = ?";
 if ($stmt_fetch = $conn->prepare($sql_fetch)) {

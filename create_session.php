@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['class_id'])) {
 
     $class_id = $_POST['class_id'];
 
-    // 4. 🔥 The "Star" Feature: Generate a random, 4-digit PIN
+    // 4. The "Star" Feature: Generate a random, 4-digit PIN
     // We'll use random_int for a secure random number.
     $session_pin = random_int(1000, 9999); 
 
